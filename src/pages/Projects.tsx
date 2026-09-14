@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, ExternalLink } from 'lucide-react'
+import { X, ExternalLink, Globe } from 'lucide-react'
 
 interface Project {
   title: string
@@ -7,10 +7,9 @@ interface Project {
   tags: string[]
   github?: string
   live?: string
-  // Fields from the screenshot rubric:
   fullDescription?: string
   process?: string
-  videoUrl?: string // Embed URL (e.g., YouTube/Vimeo embed or direct .mp4)
+  videoUrl?: string
 }
 
 const projects: Project[] = [
@@ -19,18 +18,18 @@ const projects: Project[] = [
     description: 'A responsive full-stack movie store built with modern web tools.',
     tags: ['Python', 'Django', 'SQLite', 'Bootstrap'],
     github: 'https://github.com/weimic/moviesstore',
+    live: 'https://mwei.pythonanywhere.com',
     fullDescription:
       'A full-stack web application built alongside the textbook, "Django 5 for the Impatient." Users are able to browse and search for movies, add and see reviews, and purchase movies. This application provides distinct webpages for the vast movie catalog, login/registration, the shopping cart, and order history so that users can have an easy shopping experience. Each movie page provides a description, price, and a review section where users can add and report reviews, as well as edit and delete their own reviews. It contains dynamic inventory search, user cart management, and checkout flows. Administrators can also manage movies, users, reviews, and orders from an authentication-required webpage. The comprehensive user interface directly maps to various features covering customer checkout, review submissions, and administrative inventory controls. It is hosted on PythonAnywhere and is accessible from anywhere with an internet.',
     process:
       'Throughout this project, I used the corresponding textbook ("Django 5 for the Impatient") and embedded resources like Django documentation. I relied on compartmentalization and Django\'s built-in MVT system to stay organized and maintain encapsulation for an understandable codebase. My recordings contain goals and thorough voiced documentation about my actions, which was useful to review before building the application out further. I made sure to search extensively for whitespace gaps, since that was a recurring issue. Any questions I had were easily answered through the textbook, as its linked resources were detailed and easy to read.',
-    videoUrl: 'https://www.youtube.com/embed/mOkyE_717UU', // Replace with your video embed link
+    videoUrl: 'https://www.youtube.com/embed/mOkyE_717UU',
   },
 ]
 
 export default function Projects() {
   const [activeProject, setActiveProject] = useState<Project | null>(null)
 
-  // Close on Escape & freeze background scroll
   useEffect(() => {
     if (!activeProject) return
 
@@ -101,21 +100,36 @@ export default function Projects() {
               </div>
             </div>
 
-            {project.github && (
+            {/* Tile Footer: GitHub & Live Site */}
+            {(project.github || project.live) && (
               <div
-                className="mt-6 pt-4 flex items-center justify-between"
+                className="mt-6 pt-4 flex items-center justify-between gap-4"
                 style={{ borderTop: '1px solid var(--border)' }}
-                onClick={(e) => e.stopPropagation()} // Keeps link click from firing modal
+                onClick={(e) => e.stopPropagation()}
               >
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-semibold hover:underline inline-flex items-center gap-1"
-                  style={{ color: 'var(--accent)' }}
-                >
-                  View on GitHub &rarr;
-                </a>
+                {project.github ? (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-semibold hover:underline inline-flex items-center gap-1"
+                    style={{ color: 'var(--accent)' }}
+                  >
+                    View on GitHub &rarr;
+                  </a>
+                ) : <span />}
+
+                {project.live && (
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-semibold hover:underline inline-flex items-center gap-1"
+                    style={{ color: 'var(--text-h)' }}
+                  >
+                    Live Site <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
               </div>
             )}
           </div>
@@ -140,7 +154,6 @@ export default function Projects() {
               boxShadow: 'var(--shadow)',
             }}
           >
-            {/* Top Accent Strip */}
             <div
               className="absolute top-0 left-0 right-0 h-[5px]"
               style={{ backgroundColor: 'var(--accent)' }}
@@ -183,7 +196,7 @@ export default function Projects() {
               {/* 1. Video Demonstration */}
               {activeProject.videoUrl && (
                 <div className="space-y-2">
-                  <span className="text-md tracking-wider text-slate-400 uppercase block">
+                  <span className="text-md tracking-wider text-slate-400 uppercase block font-mono text-xs">
                     Video Demonstration
                   </span>
                   <div
@@ -204,7 +217,7 @@ export default function Projects() {
               {/* 2. Project Description */}
               {activeProject.fullDescription && (
                 <div className="space-y-1.5 pt-2">
-                  <span className="text-md tracking-wider text-slate-400 uppercase block">
+                  <span className="text-md tracking-wider text-slate-400 uppercase block font-mono text-xs">
                     Project Overview
                   </span>
                   <p className="leading-relaxed">{activeProject.fullDescription}</p>
@@ -214,7 +227,7 @@ export default function Projects() {
               {/* 3. Process Description */}
               {activeProject.process && (
                 <div className="space-y-1.5 pt-2">
-                  <span className="text-md tracking-wider text-slate-400 uppercase block">
+                  <span className="text-md tracking-wider text-slate-400 uppercase block font-mono text-xs">
                     Process & Methodology
                   </span>
                   <p className="leading-relaxed">{activeProject.process}</p>
@@ -222,21 +235,38 @@ export default function Projects() {
               )}
             </div>
 
-            {/* Footer Links */}
-            {activeProject.github && (
+            {/* Modal Footer Links: GitHub & Live App */}
+            {(activeProject.github || activeProject.live) && (
               <div
-                className="mt-8 pt-4 flex items-center justify-between border-t"
+                className="mt-8 pt-4 flex items-center justify-between flex-wrap gap-3 border-t"
                 style={{ borderColor: 'var(--border)' }}
               >
-                <a
-                  href={activeProject.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-medium hover:underline"
-                  style={{ color: 'var(--accent)' }}
-                >
-                  Source Repository <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                {activeProject.github ? (
+                  <a
+                    href={activeProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium hover:underline"
+                    style={{ color: 'var(--accent)' }}
+                  >
+                    Source Repository <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                ) : <div />}
+
+                {activeProject.live && (
+                  <a
+                    href={activeProject.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium hover:underline"
+                    style={{
+                      color: '#ffffff',
+                    }}
+                  >
+                    <Globe className="w-3.5 h-3.5" />
+                    Visit Live Site
+                  </a>
+                )}
               </div>
             )}
           </div>

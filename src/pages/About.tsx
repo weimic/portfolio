@@ -7,7 +7,7 @@ export default function About() {
 
   const faqs = [
     {
-      q: 'Why computer science?',
+      q: 'Why computer science now?',
       a: "I've always enjoyed learning about tricky observations and problem-solving. Computers appear to be a great vessel for that right now.",
     },
     {
